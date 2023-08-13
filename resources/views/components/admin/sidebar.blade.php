@@ -5,7 +5,7 @@
   <a href="{{route("types.index")}}" class="nav-link">
     <i class="nav-icon fas fa-list"></i>
     <p>
-      Show all leave types
+      Show all <span class="text-warning">leave types</span>
 
     </p>
   </a>
@@ -15,7 +15,26 @@
     <a href="{{route("types.create")}}" class="nav-link">
       <i class="nav-icon fas fa-plus"></i>
       <p>
-        Create leave type
+        Create <span class="text-warning">leave type</span>
+
+      </p>
+    </a>
+  </li>
+<li class="nav-item">
+  <a href="{{route("management.employees")}}" class="nav-link">
+    <i class="nav-icon fas fa-list"></i>
+    <p>
+      Show all <span class="text-info">employees</span>
+
+    </p>
+  </a>
+</li>
+
+<li class="nav-item">
+    <a href="{{route("register")}}" class="nav-link">
+      <i class="nav-icon fas fa-plus"></i>
+      <p>
+        Create a new <span class="text-info">employee</span>
 
       </p>
     </a>

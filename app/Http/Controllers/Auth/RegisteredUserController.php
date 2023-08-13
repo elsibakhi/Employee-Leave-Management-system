@@ -42,10 +42,50 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
+        // event(new Registered($user));
 
-        Auth::login($user);
+        // Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route("register")->with("success","The employee created successfully");
     }
+
+
+    public function edit(User $employee): View
+    {
+        return view('auth.edit',compact("employee"));
+    }
+
+    public function update(Request $request,User $employee): RedirectResponse
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+       $employee->update([
+            'name' => $request->name,
+            'email' => $request->email,
+           'password' => $request->password ? Hash::make($request->password) : $employee->password,
+
+            
+        ]);
+
+        // event(new Registered($user));
+
+        // Auth::login($user);
+
+        return redirect()->route("register.edit",$employee->id)->with("success","The employee updated successfully");
+    }
+
+public function destroy(User $employee){
+
+    $employee->delete();
+
+    
+    return redirect()->route("management.employees")->with("success","The employee deleted successfully");
+}
+
+
+
 }

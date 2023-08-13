@@ -183,7 +183,7 @@
 </table>
 <div class="my-3 d-flex justify-content-center">
 
-  {{$requests->links("pagination::bootstrap-5")}}
+  {{$requests->links()}}
 </div>
 </div>
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Request;
+use App\Models\User;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
@@ -66,5 +67,13 @@ class ManagementController extends Controller
 
 
         return redirect()->route("management.index")->with("success","The request has been deleted 😇");
+    }
+    public function employees()
+    {
+          $employees=User::where("role","empolyee")->paginate(7);
+        
+
+
+        return view("management.employees",compact("employees"));
     }
 }

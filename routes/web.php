@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AttachmentController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -52,7 +53,20 @@ use App\Http\Controllers\TypeController;
 Route::group(["middleware"=>["auth","administrator"]],function (){
     
     Route::resource("types",TypeController::class)->except(["show"]);
+    Route::get("manage/employees/show",[ManagementController::class,"employees"])->name("management.employees");
     Route::resource("management",ManagementController::class)->parameters(["management"=>"request"])->except(["create","show","store"]);
+    Route::get('register', [RegisteredUserController::class, 'create'])
+    ->name('register');
+    Route::get('/register/{employee}/edit', [RegisteredUserController::class, 'edit'])
+    ->name('register.edit');
+    Route::put('/register/{employee}', [RegisteredUserController::class, 'update'])
+    ->name('register.update');
+    Route::delete('/register/{employee}', [RegisteredUserController::class, 'destroy'])
+    ->name('register.destroy');
+
+Route::post('register', [RegisteredUserController::class, 'store']);
+    
+
 });
 Route::group(["middleware"=>["auth","empolyee"]],function (){
     

@@ -5,6 +5,9 @@
     <p >Duration
       <b class="d-block">{{$request->duration}}</b>
     </p>
+    <p >Start date
+      <b class="d-block">{{$request->start_dates}}</b>
+    </p>
     <p >Description
       <b class="d-block">{{$request->description}}</b>
     </p>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RequestStatus;
 use App\Models\Request;
 use App\Http\Requests\StoreRequestRequest;
 use App\Http\Requests\UpdateRequestRequest;
@@ -17,16 +18,27 @@ class RequestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(HttpRequest $request)
     {
-        $requests=Request::paginate(7);
+        $requests=Request::orderBy("created_at");
+        
+
+        if($request->has("search")){
+            $requests->filter($request->query("search"));
+        }
+        
+        $requests=$requests->paginate(7)->withQueryString();
         $request_pure=Request::all();
-         $request_number=(clone $request_pure)->count();
-         $pending_number=(clone $request_pure->where("status","pending"))->count();
-         $approved_number=(clone $request_pure->where("status","approved"))->count();
-         $rejected_number=(clone $request_pure->where("status","rejected"))->count();
+        $statistics=[
+
+            'request'   =>(clone $request_pure)->count(),
+            'pending'   =>(clone $request_pure->where("status",RequestStatus::P))->count(),
+            'approved'  =>(clone $request_pure->where("status",RequestStatus::A))->count(),
+            'rejected'  =>(clone $request_pure->where("status",RequestStatus::R))->count(),
+
+        ];
       
-        return view('requests.index',compact(['requests',"request_number","pending_number","approved_number","rejected_number"]));
+        return view('requests.index',compact(['requests',"statistics"]));
 
     }
 
@@ -51,7 +63,7 @@ class RequestController extends Controller
     
      $validated=$request->validated();
 
-    
+  
      $validated["employee_id"]=Auth::id();
   $leave_request= Request::create($validated);
 
@@ -92,7 +104,7 @@ class RequestController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequestRequest $Udrequest, Request $request)
+    public function update(StoreRequestRequest $Udrequest, Request $request)
     {
         
         

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RequestStatus;
 use App\Models\Request;
 use App\Models\User;
 use Illuminate\Http\Request as HttpRequest;
@@ -13,16 +14,27 @@ class ManagementController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(HttpRequest $request)
     {
-         $requests= Request::paginate(7);
-         $requests=Request::paginate(7);
+        $requests=Request::orderBy("created_at");
+        
+
+        if($request->has("search")){
+            $requests->filter($request->query("search"));
+        }
+        
+        $requests=$requests->paginate(7)->withQueryString();
+      
          $request_pure=Request::all();
-          $request_number=(clone $request_pure)->count();
-          $pending_number=(clone $request_pure->where("status","pending"))->count();
-          $approved_number=(clone $request_pure->where("status","approved"))->count();
-          $rejected_number=(clone $request_pure->where("status","rejected"))->count();
-        return view('management.index',compact("requests","request_number","pending_number","approved_number","rejected_number"));
+         $statistics=[
+
+            'request'   =>(clone $request_pure)->count(),
+            'pending'   =>(clone $request_pure->where("status",RequestStatus::P))->count(),
+            'approved'  =>(clone $request_pure->where("status",RequestStatus::A))->count(),
+            'rejected'  =>(clone $request_pure->where("status",RequestStatus::R))->count(),
+
+        ];
+        return view('management.index',compact("requests","statistics"));
     }
 
 

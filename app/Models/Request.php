@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Enums\RequestStatus;
 use App\Models\Scopes\RequestScope;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,10 +18,38 @@ class Request extends Model
     use HasFactory;
 
     protected $table="leave_requests";
-    protected $fillable=["employee_id","leaveType_id","duration","description","status","reason"];
+    protected $fillable=["employee_id","leaveType_id","duration","description","status","reason","start_date"];
 
 
+protected $casts=[
+   'start_date' => "datetime",
+   'status' => RequestStatus::class,
+   
+];
 
+public  static function  scopeFilter(Builder $query,$serach): void
+    {
+        $query
+        ->where(function (Builder $query2) use ($serach){
+                     $query2->where('duration', 'like',"%$serach%")
+                     ->orWhere('description', 'like',"%$serach%")
+                     ->orWhere('status', 'like',"%$serach%")
+                     ->orWhere('start_date', 'like',"%$serach%")
+                     ->orWhere('reason', 'like',"%$serach%");
+        })->orWhereHas('empolyee', function (Builder $query3) use ($serach) {
+          $query3->where('name', 'like', "%$serach%");
+     })
+        ->orWhereHas('type', function (Builder $query4) use ($serach) {
+          $query4->where('type', 'like', "%$serach%");
+     })
+        
+        ;
+    }
+
+
+public function getStartDatesAttribute(){
+   return $this->start_date->format("Y-m-d");
+}
 public function empolyee():BelongsTo {
    return $this->belongsTo(User::class,"employee_id");
 }

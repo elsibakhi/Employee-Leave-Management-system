@@ -25,6 +25,7 @@ class StoreRequestRequest extends FormRequest
             "leaveType_id"=>"required|integer|exists:leave_types,id",
             "duration"=>"required|integer",
             "description"=>"nullable|string|max:255",
+            "start_date"=>"nullable|date|after:today",
             "attachments[]"=>"nullable|file|max:900000"
         ];
     }

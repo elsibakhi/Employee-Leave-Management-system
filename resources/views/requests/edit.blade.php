@@ -7,6 +7,7 @@
 
           <x-form.layout method="put" :action="route('requests.update',$request->id)" btn-color="dark" btn-content="update" enctype="multipart/form-data" >
             <x-form.input-text type="number" name="duration" value="{{old('duration')??$request->duration}}" />
+              <x-form.input-text type="date" name="start_date" value="{{old('start_date')??$request->start_dates}}" />
             <x-form.input-textarea  name="description" placeholder="Do you want to say something extra? Write it down"  >
               {{old('description')??$request->description}}
             </x-form.input-textarea>

@@ -23,7 +23,7 @@
       <!-- small box -->
       <div class="small-box bg-info">
         <div class="inner">
-          <h3>{{$requestNumber}}</h3>
+          <h3>{{$statistics["request"]}}</h3>
 
           <p>Requests number</p>
         </div>
@@ -38,7 +38,7 @@
       <!-- small box -->
       <div class="small-box bg-success">
         <div class="inner">
-          <h3>{{$approvedNumber}}</h3>
+          <h3>{{$statistics["approved"]}}</h3>
 
           <p>Approved requests number</p>
         </div>
@@ -53,7 +53,7 @@
       <!-- small box -->
       <div class="small-box bg-warning">
         <div class="inner">
-          <h3>{{$pendingNumber}}</h3>
+          <h3>{{$statistics["pending"]}}</h3>
 
           <p>Pending requests number</p>
         </div>
@@ -68,7 +68,7 @@
       <!-- small box -->
       <div class="small-box bg-danger">
         <div class="inner">
-          <h3>{{$rejectedNumber}}</h3>
+          <h3>{{$statistics["rejected"]}}</h3>
 
           <p>Rejected requests number</p>
         </div>
@@ -95,6 +95,7 @@
   <tr>
     <th>Empolyee name</th>
     <th>Duration</th>
+    <th>Start date</th>
     <th>Type</th>
     <th>Description</th>
     <th>Status</th>
@@ -109,6 +110,7 @@
  {{$request->empolyee->name}}
 </td>
 <td>{{$request->duration}}</td>
+<td>{{$request->start_dates}}</td>
 <td>
     {{$request->type->type}}
 </td>
@@ -120,9 +122,9 @@
 <td>
     <span @class(['badge', 
     
-    'badge-success' => $request->status == "approved" ,
-    'badge-warning' => $request->status =="pending" ,
-    'badge-danger' => $request->status  == "rejected"
+    'badge-success' => $request->status->value == "approved" ,
+    'badge-warning' => $request->status->value =="pending" ,
+    'badge-danger' => $request->status->value  == "rejected"
     
     
     ]) >{{$request->status}}</span>
